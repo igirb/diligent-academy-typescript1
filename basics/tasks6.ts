@@ -150,3 +150,4 @@ type GetAccountById = (id: number) => Account
 //  from the GetAccountById's argument type and return type:
 type GetIdFromAccount = (account: ReturnType<GetAccountById>) => Account["id"]
 const getIdFromAccount: GetIdFromAccount = (account) => account.id
+
