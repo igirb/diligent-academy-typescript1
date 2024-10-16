@@ -1,54 +1,54 @@
-var num = 10;
+"use strict";
+let num = 10;
 console.log(num);
 function add(a, b) {
     return a + b;
 }
-var result = add(1, 2);
+let result = add(1, 2);
 console.log(result);
-var person1 = {
+let person1 = {
     name: 'Will Smith',
     age: 50,
-    greet: function (message) {
-        console.log("".concat(message, ": ").concat(this.name));
+    greet(message) {
+        console.log(`${message}: ${this.name}`);
     }
 };
 person1.greet('Hello, my name is');
-var Person2 = /** @class */ (function () {
-    function Person2(name, age) {
+class Person2 {
+    constructor(name, age) {
         this.name = name;
         this.age = age;
     }
-    Person2.prototype.greet = function (message) {
+    greet(message) {
         console.log(message);
-    };
-    return Person2;
-}());
-var person2 = new Person2('Will Smith', 50);
+    }
+}
+let person2 = new Person2('Will Smith', 50);
 person2.greet('Hi');
-var userID = 12;
-var c = 'hello';
-var d = 1;
+let userID = 12;
+let c = 'hello';
+let d = 1;
 // let incorrectUser: UserWithRole = {
 //     name: 'Gipsz Jakab',
 //     age: 55
 // }
-var correctUser = {
+let correctUser = {
     name: "Bob",
     age: 23,
     permission: ['read', 'write', 'admin']
 };
-var numbers = [1, 2, 3, 4, 5];
+const numbers = [1, 2, 3, 4, 5];
 numbers.push(6);
-console.log("correct numbers: ".concat(numbers));
+console.log(`correct numbers: ${numbers}`);
 //numbers.push("6");
-console.log("incorrect numbers: ".concat(numbers)); //after conversion to js will still run - have to be careful
+console.log(`incorrect numbers: ${numbers}`); //after conversion to js will still run - have to be careful
 //if you want your function to accept any type:
 function firstElement(arr) {
     return arr[0];
 }
-var names = ['Annamari', 'Béla', 'Cecil'];
+const names = ['Annamari', 'Béla', 'Cecil'];
 console.log("first element of names: " + firstElement(names));
-var nbrs = [1, 2, 3, 4];
+const nbrs = [1, 2, 3, 4];
 console.log("first element of nbrs: " + firstElement(nbrs));
 function swap(a, b) {
     return [b, a];

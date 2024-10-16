@@ -2,7 +2,7 @@
 // If you get stucked, here is the docs: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.typeAssert = typeAssert;
-var products = [
+const products = [
     {
         id: 4,
         title: "How to Hack NASA with HTML",
@@ -46,10 +46,10 @@ console.log(products[0].createdAt);
 // Add type annotations to the arguements and return types
 // of these two functions.
 function filterCourses(products) {
-    return products.filter(function (product) { return product.type === 'Course'; });
+    return products.filter(product => product.type === 'Course');
 }
 function getTitles(products) {
-    return products.map(function (product) { return product.title; });
+    return products.map(product => product.title);
 }
 // Exercise 3,
 // When Typescript infers correctly the types and when it is necessary
@@ -58,8 +58,8 @@ function getTitles(products) {
 // above. Hover the mouse to the variables to check the inferred types.
 // When do you see "any", and when something else?
 // This two functions just here to check the proper return type in the tests.
-var courses = filterCourses(products);
-var titles = getTitles(products);
+const courses = filterCourses(products);
+const titles = getTitles(products);
 console.log(courses);
 console.log(titles);
 // Exercise 4,
@@ -68,10 +68,10 @@ console.log(titles);
 // Spot that the inline type annotation here is different than the
 // Product's type definition.
 function formatPrice(product) {
-    return "".concat(product.price, " ").concat(product.currency);
+    return `${product.price} ${product.currency}`;
 }
 // passing a product to the function, for tests only.
-var price = formatPrice(products[0]);
+const price = formatPrice(products[0]);
 console.log(price);
 // Spoiler Alert!
 //

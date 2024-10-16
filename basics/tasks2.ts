@@ -6,22 +6,22 @@
 // TODO: remove the "any" type, and add a concerete type for these basic primitives
 // How they are working, if you remove all type definitions? How inference is working here?
 
-let price: any /* add the correcy type annotation here instead of any */
+let price: number /* add the correcy type annotation here instead of any */
 price = 100.5
 
-let title: any /* add type annotation here */
+let title: string /* add type annotation here */
 title = "How to Hack NASA with HTML?"
 
-let option: any /* add type annotation here */
+let option: boolean /* add type annotation here */
 option = true
 
-let prices: any /* add type annotation here */
+let prices: Array<number> /* add type annotation here */
 prices = [3, 5, 100, 3.5]
 
-let titles: any /* add type annotation here */
+let titles: Array<string> /* add type annotation here */
 titles = ["How to Hack NASA with HTML?", "Cat Taming Masterclass"]
 
-let options: any /* add type annotation here */
+let options: Array<boolean> /* add type annotation here */
 options = [true, true, false]
 
 // Exercise 2) Any
@@ -35,10 +35,18 @@ options = [true, true, false]
 // TODO: Create a proper type definition based on the usage of the product,
 //    correct the input data and the function usage below based on that.
 
-const anyProduct: any = {name: 'Mr. Fluff', kind: 'British Shorthair', age: 4}
+type Product = {
+    title: string,
+    price: number,
+}
+
+const anyProduct: Product = {title: 'Book', price: 45}
 const productTitle = anyProduct.title
 const priceWithTaxes = anyProduct.price * (1.25)
-const upperCaseTitle = anyProduct.price.toUpperCase()
+const upperCaseTitle = anyProduct.title.toUpperCase()
+
+console.log(productTitle, priceWithTaxes, upperCaseTitle);
+
 
 // Exercise 3) Anonymus Functions
 
@@ -48,11 +56,14 @@ const upperCaseTitle = anyProduct.price.toUpperCase()
 
 // TODO: correct the parameter's type of createKeysFromTitles. Spot out
 //  how it is changing the map function's types. 
-const titelsToConvert = ["How to Hack NASA with HTML?", "Cat Taming Masterclass"]
-const createKeysFromTitles = (titles /* */) => {
-    return titles.map(title => title.toLowerCase().replace(" ", "_").replace("?", ""))
+const titelsToConvert: string[] = ["How to Hack NASA with HTML?", "Cat Taming Masterclass"]
+const createKeysFromTitles = (titles: string[]) : string[] => {
+    return titles.map(title => title.toLowerCase().replaceAll(" ", "_").replaceAll("?", ""))
 }
-const keys = createKeysFromTitles(titelsToConvert)
+const keys: string[] = createKeysFromTitles(titelsToConvert)
+
+console.log(keys);
+
 
 // Exercise 4) Union types
 
@@ -64,7 +75,7 @@ const keys = createKeysFromTitles(titelsToConvert)
 //  (Check the type errors in the usages below.)
 interface Course {
     title: string,
-    price: number,
+    price: string | number
 }
 
 const checkoutCourse: Course = {
@@ -81,8 +92,11 @@ const shoppingCartCourse: Course = {
 //  creatively, in the Narrowing chapter we will see a lot of
 //  patterns to handle these cases.
 const getTax = (course: Course) => {
-    return course.price * 0.25
+    return Number(course.price) * 0.25
 }
+
+console.log(getTax(checkoutCourse));
+
 
 // Exercise 5) Types Aliases
 //
@@ -95,7 +109,9 @@ const getTax = (course: Course) => {
 //  Note type alias can be used for any type, not just
 //  objects. Check the examples in the handbook.
 type Account = {
-
+    id: number,
+    name: string,
+    currency: "USD" | "HUF"
 }
 
 const account: Account = {
@@ -122,7 +138,7 @@ const accountCurrency = getCurrency(account)
 //  In our application we trust in the API. Assert it to an 
 //  Account type (declared above) to be able to use it as an Account
 //  in the other parts of the application.  
-const fetchAccount = (id: number): object => ({id: id, name: "Some Account", currency: "USD"})
+const fetchAccount = (id: number): Account => ({id: id, name: "Some Account", currency: "USD"})
 const currentAccount = fetchAccount(4) /* add Type Assertion here */
 const currentAccountName = currentAccount.name
 
@@ -142,7 +158,7 @@ type EUR = 'EUR'
 //  both EUR and USD. How can you define two possible
 //  types for one type? (we have seen before
 //  with numbers and strings).
-type Currency = string
+type Currency = USD | EUR
 const firstCurrency: Currency = 'USD';
 const secondCurrency: Currency = 'EUR'
 const usd: USD = firstCurrency;
@@ -151,7 +167,7 @@ const eur: EUR = secondCurrency;
 // TODO: When corrected the Currency type, another issue come up
 //  later in the code. 
 //  Check the inferred type of the someAccount variable.
-//  It is inferred to string, but in the gerSomeCurrency
+//  It is inferred to string, but in the getSomeCurrency
 //  function we using our Currency type. How add some Type 
 //  assertion to the someAccount object to correct the later
 //  usage of the someAccount variable. 
@@ -159,11 +175,14 @@ const eur: EUR = secondCurrency;
 // https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-aliases
 const someAccount = {
     name: "My Awesome Account",
-    currency: "USD"
+    currency: usd
 }
 
 const getSomeCurrency = (account: {currency: Currency}) => account.currency
 const someCurrency = getSomeCurrency(someAccount)
+
+console.log(getSomeCurrency(someAccount));
+
 
 // Exercise 7) null and undefined
 //
@@ -180,15 +199,16 @@ const someCurrency = getSomeCurrency(someAccount)
 //  the type errors.
 type AccountWithOrWithoutCurrency = {
     name: string,
-    currency: 'USD' | 'EUR' | undefined
+    currency: 'USD' | 'EUR' | null
 }
-const removeCurrency = (account: AccountWithOrWithoutCurrency): AccountWithOrWithoutCurrency => {
+const removeCurrency = <Type>(account: AccountWithOrWithoutCurrency, valuta: Type): AccountWithOrWithoutCurrency => {
     return {
         ...account,
         currency: null
     }
 }
 
+removeCurrency<Currency>({name: "forint", currency: 'USD'}, usd);
 
 // Spoiler Alert!
 //
@@ -200,7 +220,7 @@ const removeCurrency = (account: AccountWithOrWithoutCurrency): AccountWithOrWit
 // Exercise 1 tests
 typeAssert<IsTypeEqual<typeof price, number>>()
 typeAssert<IsTypeEqual<typeof title, string>>()
-typeAssert<IsTypeEqual<typeof option, boolean>>()
+typeAssert<IsTypeEqual<typeof option, true>>()
 typeAssert<IsTypeEqual<typeof prices, number[]>>()
 typeAssert<IsTypeEqual<typeof titles, string[]>>()
 typeAssert<IsTypeEqual<typeof options, boolean[]>>()
