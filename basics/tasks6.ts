@@ -13,10 +13,11 @@ interface FeatureFlagActivators {
 }
 
 // TODO: define the Flag type to avoid the errors in the Function.
-type Flag = unknown
+type Flag = keyof FeatureFlagActivators;
 const featureFlagEnabler = (flag: Flag, activators: FeatureFlagActivators) => {
     activators[flag]()
 }
+
 
 // Exercise 2)
 // Keyof
@@ -25,7 +26,7 @@ const featureFlagEnabler = (flag: Flag, activators: FeatureFlagActivators) => {
 // TODO define the Field type which determines
 //  the given column which field should be displayed
 //  from the row.  
-type Field = unknown
+type Field = keyof Row
 
 interface Row {
     title: string,
@@ -71,9 +72,11 @@ interface Cart {
 }
 
 // TODO: Define a Curator type from the Cart interface only.
-type Curator = unknown
+type Curator = Cart["products"][number]["curator"]
 
 const getCuratorName = (curator: Curator) => curator.name
+console.log(getCuratorName({name: "sth", email: "example"}));
+
 
 // Exercise 4)
 // Here is the reference page of the Utility Types
@@ -91,18 +94,20 @@ interface Listing {
     type: "Course" | "Program"
 }
 
-const listingFixture = (overrides: /* */): Listing => ({
+const listingFixture = (overrides: Partial<Listing>) => ({
     title: "Schrödringer's Cat under testing",
     price: 100.0,
     type: "Course",
     ...overrides
 })
 const freeListing = listingFixture({price: 0.0})
+console.log(freeListing);
+
 
 // TODO: Define the Message Type 
 type ErrorCode = 'user_not_found' | 'invalid_account' | 'ongoing_checkout' | 'permission_denided'
 
-type Message = unknown
+type Message = Record<ErrorCode, string>
 const messages: Message = {
     user_not_found: 'Sry, Your user is not found.',
     invalid_account: 'Sry, your account is invalid.',
@@ -110,6 +115,8 @@ const messages: Message = {
     permission_denided: 'Sry, you do not have the proper rights to access this site.'
 }
 const getHumanReadableMessage = (code: ErrorCode) => messages[code]
+console.log(getHumanReadableMessage('invalid_account'));
+
 
 // TODO: Create a new NonSensitiveUserData from 
 //   the original CurrentUserData which contains only
@@ -122,19 +129,24 @@ interface CurrentUserData {
     phone: string,
     favoriteAnimal: 'cat' | 'dog'
 }
-type NonSensitiveUserData = unknown
+type NonSensitiveUserData = Pick<CurrentUserData, "userName" | "favoriteAnimal">
+
+const data: NonSensitiveUserData = {
+    userName: "Loli",
+    favoriteAnimal: 'cat'
+}
 
 // TODO: Create a NonSystemUserData type from the CurrentUserData, which 
 //   is almost the same as CurrentUserData, but the sessionId is missing from
 //   it.
-type NonSystemUserData = unknown
+type NonSystemUserData = Omit<CurrentUserData, "sessionId">
 
 interface Account {
     id: number,
     name: string,
 }
 type GetAccountById = (id: number) => Account
-// TODO: Define the GerIdFromAccount function type expression only
+// TODO: Define the GetIdFromAccount function type expression only
 //  from the GetAccountById's argument type and return type:
-type GetIdFromAccount = unknown
+type GetIdFromAccount = (account: ReturnType<GetAccountById>) => Account["id"]
 const getIdFromAccount: GetIdFromAccount = (account) => account.id

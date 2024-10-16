@@ -118,3 +118,8 @@ function getArea(shape: Shape) {
 function isCircle(shape: Shape): shape is Circle {
     return shape.kind === 'circle';
 }
+
+/* const ourTuple: [id: number, name: string] = [4, "Lola"];
+ourTuple[0]
+const ourTupl: [number, string] = [4, "Lola"];
+const ourT: [number, string] = ["gdfg", 5]; */
