@@ -1,4 +1,3 @@
-"use strict";
 // @strict
 // If you get stucked, here is the docs: https://www.typescriptlang.org/docs/handbook/2/narrowing.html
 //
@@ -12,7 +11,22 @@
 // and apply them to the case. Check the types of the variables in each branch to see
 // how Typescript narrowing the different types. It is worth to check before and after
 // the correction.
-const products = [
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var products = [
     {
         title: "How to Hack NSA with HTML? (no typos included)",
         price: 100.8
@@ -22,25 +36,25 @@ const products = [
         price: 50.3
     }
 ];
-const cart = {
+var cart = {
     products: products
 };
 // TODO: 
 // This function is working only for a list of numbers.
 // Correct its implementation with a corresponding type guards to 
 // work properly with a single number too.
-const getTotal = (prices) => {
-    if ( /* add type guard here */) {
-        const total = prices.reduce((sum, price) => sum + price, 0);
+var getTotal = function (prices) {
+    if (typeof prices === "object") {
+        var total = prices.reduce(function (sum, price) { return sum + price; }, 0);
         return Math.round(total);
     }
     else {
         return Math.round(prices);
     }
 };
-const courseTotal = getTotal(products[0].price);
-const cartTotal = getTotal(cart.products.map(product => product.price));
-const accounts = [
+var courseTotal = getTotal(products[0].price);
+var cartTotal = getTotal(cart.products.map(function (product) { return product.price; }));
+var accounts = [
     {
         name: 'My Awesome Account',
         domain: 'my.awesome.info'
@@ -52,18 +66,18 @@ const accounts = [
 ];
 // TODO: Make it possible to handle the getUrl both the DomainAccount and a
 //  Path account types.
-const getUrl = (account, subPath) => {
-    if ( /* add type guard here */) {
-        return `${account.path}/${subPath}`;
+var getUrl = function (account, subPath) {
+    if ("path" in account) {
+        return "".concat(account.path, "/").concat(subPath);
     }
     else {
-        return `${account.domain}/${subPath}`;
+        return "".concat(account.domain, "/").concat(subPath);
     }
 };
 // TODO: make it possible to handle both the string and number
 //  type of price.
-const getListingTotal = (listing) => {
-    if ( /* add type guard here */) {
+var getListingTotal = function (listing) {
+    if (typeof listing["price"] === "number") {
         return listing.price * listing.quantity;
     }
     else {
@@ -72,21 +86,29 @@ const getListingTotal = (listing) => {
 };
 // Exercise 4) Narrowing, instanceof
 // 
-class InvalidAccountId extends Error {
-    constructor(id) {
-        super();
-        this.id = id;
+var InvalidAccountId = /** @class */ (function (_super) {
+    __extends(InvalidAccountId, _super);
+    function InvalidAccountId(id) {
+        var _this = _super.call(this) || this;
+        _this.id = id;
+        return _this;
     }
-}
+    return InvalidAccountId;
+}(Error));
 ;
-class AccessDenided extends Error {
-}
+var AccessDenided = /** @class */ (function (_super) {
+    __extends(AccessDenided, _super);
+    function AccessDenided() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return AccessDenided;
+}(Error));
 ;
 // TODO: Make it possible to handle different Error objects
 //  correctly hence their properties are different.
-const getErrorMessage = (error) => {
-    if ( /* */) {
-        return `Your account ID (${error.id}) is invalid.`;
+var getErrorMessage = function (error) {
+    if (error instanceof InvalidAccountId) {
+        return "Your account ID (".concat(error.id, ") is invalid.");
     }
     else {
         return 'You do not have access to this account.';
@@ -95,32 +117,47 @@ const getErrorMessage = (error) => {
 // TODO: In this example we can distinguish Courses from Programs
 //  by the existence of the sequential prop. Fill this custom Type predicate
 //  to fulfill the latter usage below.
-const isProduct = (product) => {
-    /* add the implementation of the type here */
+var isProduct = function (product) {
+    return product.sequential !== undefined;
 };
-const describeProduct = (product) => {
+var describeProduct = function (product) {
     if (isProduct(product)) {
-        return `This is a Program and it is ${product.sequential ? 'sequential' : 'non-sequential'}.`;
+        return "This is a Program and it is ".concat(product.sequential ? 'sequential' : 'non-sequential', ".");
     }
     else {
-        return `This is a Course.`;
+        return "This is a Course.";
     }
 };
+console.log(describeProduct({ title: "vmi", sequential: false }));
 // TODO: The account specific promotion is added later to the code,
 //  and in some function this case is not handled properly. Add the
 //  explicit return type here. Despite the docs the never + default hack is not
 //  needed, if the return type is explicit. Correct the function body, to handle
 //  the account case.
 //  What is the type of the promotion.scope? (to recap a previous topic)
-const getPromotionMessage = (promotion) => {
+var getPromotionMessage = function (promotion) {
     switch (promotion.scope) {
         case 'user':
-            return `Here is your personal discount for you. Only valid with User ID: ${promotion.userId}`;
+            return "Here is your personal discount for you. Only valid with User ID: ".concat(promotion.userId);
         case 'listing':
-            return `This listing has a discount. Only valid with this listing ID: ${promotion.listingId}`;
-        /* TODO */
+            return "This listing has a discount. Only valid with this listing ID: ".concat(promotion.listingId);
+        case 'account':
+            return "Here is an account specific discount for you. Only valid with account ID: ".concat(promotion.accountId);
     }
 };
-const calculateDiscount = (promotion) => {
-    return promotion.listingPrice - promotion.amount;
+var isFlatPromotion = function (promotion) {
+    return promotion.type === "flat";
+};
+var calculateDiscount = function (promotion) {
+    if (promotion.listingPrice === 'free') {
+        return 0.0;
+    }
+    var discountedPrice;
+    if (isFlatPromotion(promotion)) {
+        discountedPrice = promotion.listingPrice - promotion.amount;
+    }
+    else {
+        discountedPrice = promotion.listingPrice * (1 - promotion.amount);
+    }
+    return Math.max(discountedPrice, 0.0);
 };
